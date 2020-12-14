@@ -1,6 +1,7 @@
 package ast
 
 import (
+	"encoding/json"
 	"monkey/token"
 )
 
@@ -22,6 +23,14 @@ func (i *Identifier) Token() token.Token {
 
 func (i *Identifier) Value() string {
 	return i.value
+}
+
+func (i *Identifier) MarshalJSON() ([]byte, error) {
+	m := make(map[string]interface{})
+	m["NodeType"] = "Identifier"
+	m[" token"] = i.token
+	m["value"] = i.value
+	return json.Marshal(m)
 }
 
 func (i *Identifier) expressionNode() {}

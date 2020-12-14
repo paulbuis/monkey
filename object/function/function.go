@@ -4,19 +4,20 @@ import (
 	"bytes"
 	"monkey/ast"
 	"monkey/object"
+	"monkey/object/function/environment"
 	"strings"
 )
 
 type Function struct {
 	parameters []*ast.Identifier
 	body       *ast.BlockStatement
-	env        *object.Environment
+	env        *environment.Environment
 }
 
 func New(
 	parameters []*ast.Identifier,
 	body *ast.BlockStatement,
-	env *object.Environment,
+	env *environment.Environment,
 ) *Function {
 	return &Function{parameters: parameters, body: body, env: env}
 }
@@ -29,7 +30,7 @@ func (f *Function) Body() *ast.BlockStatement {
 	return f.body
 }
 
-func (f *Function) Env() *object.Environment {
+func (f *Function) Env() *environment.Environment {
 	return f.env
 }
 

@@ -2,6 +2,7 @@ package ast
 
 import (
 	"bytes"
+	"encoding/json"
 	"monkey/token"
 )
 
@@ -35,6 +36,15 @@ func (ls *LetStatement) Value() Expression {
 	return ls.value
 }
 
+func (ls *LetStatement) MarshalJSON() ([]byte, error) {
+	m := make(map[string]interface{})
+	m["NodeType"] = "LetStatement"
+	m[" token"] = ls.token
+	m["name"] = ls.name
+	m["value"] = ls.value
+
+	return json.Marshal(m)
+}
 func (ls *LetStatement) statementNode() {}
 
 func (ls *LetStatement) TokenLiteral() string {

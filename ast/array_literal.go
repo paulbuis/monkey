@@ -2,6 +2,7 @@ package ast
 
 import (
 	"bytes"
+	"encoding/json"
 	"monkey/token"
 	"strings"
 )
@@ -24,6 +25,15 @@ func (al *ArrayLiteral) Elements() []Expression {
 }
 
 func (al *ArrayLiteral) expressionNode() {}
+
+func (al *ArrayLiteral) MarshalJSON() ([]byte, error) {
+	m := make(map[string]interface{})
+	m["NodeType"] = "ArrayLiteral"
+	m["token"] = al.token
+	m["elements"] = al.elements
+
+	return json.Marshal(m)
+}
 
 func (al *ArrayLiteral) TokenLiteral() string {
 	return al.token.Literal()

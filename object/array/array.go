@@ -3,7 +3,7 @@ package array
 import (
 	"bytes"
 	"monkey/object"
-	objectError "monkey/object/error"
+	objectNull "monkey/object/null"
 	"strings"
 )
 
@@ -12,11 +12,22 @@ type Array interface {
 	Inspect() string
 	ElementAt(index int64) object.Object
 	Length() int64
+}
+
+type Slicer interface {
+	Array
 	Slice(min, max int64) Array
+}
+
+type Pusher interface {
+	Array
 	Push(newElement object.Object) Array
 }
 
-type slice struct {
+// conforms to interface Array
+// conforms to interface Pusher
+// conforms to interface Slicer
+type Slice struct {
 	elements []object.Object
 }
 
@@ -25,42 +36,42 @@ func New(elements []object.Object) Array {
 	for _, element := range elements {
 		newElements = append(newElements, element)
 	}
-	return &slice{elements: elements}
+	return &Slice{elements: elements}
 }
 
-func (ao *slice) Slice(min, max int64) Array {
-	return New(ao.elements[min:max])
+func (sl *Slice) Slice(min, max int64) Array {
+	return New(sl.elements[min:max])
 }
 
-func (ao *slice) Push(newElement object.Object) Array {
-	newElements := make([]object.Object, len(ao.elements), len(ao.elements)+1)
-	copy(newElements, ao.elements)
-	newElements = append(ao.elements, newElement)
-	return &slice{elements: newElements}
-
+func (sl *Slice) Push(newElement object.Object) Array {
+	newElements := make([]object.Object, len(sl.elements), len(sl.elements)+1)
+	copy(newElements, sl.elements)
+	newElements = append(sl.elements, newElement)
+	return &Slice{elements: newElements}
 }
 
-func (ao *slice) ElementAt(index int64) object.Object {
+func (sl *Slice) ElementAt(index int64) object.Object {
 	i := int(index)
-	if i < 0 || i >= len(ao.elements) {
-		return objectError.New("index out of bounds index=%d, array length=%d", i, len(ao.elements))
+	if i < 0 || i >= len(sl.elements) {
+		//return objectError.New("index out of bounds index=%d, array length=%d", i, len(ao.elements))
+		return objectNull.NULL()
 	}
-	return ao.elements[index]
+	return sl.elements[index]
 }
 
-func (ao *slice) Length() int64 {
-	return int64(len(ao.elements))
+func (sl *Slice) Length() int64 {
+	return int64(len(sl.elements))
 }
 
-func (ao *slice) Type() object.ObjectType {
+func (sl *Slice) Type() object.ObjectType {
 	return object.ARRAY_OBJ
 }
 
-func (ao *slice) Inspect() string {
+func (sl *Slice) Inspect() string {
 	var out bytes.Buffer
 
-	elements := make([]string, 0, len(ao.elements))
-	for _, e := range ao.elements {
+	elements := make([]string, 0, len(sl.elements))
+	for _, e := range sl.elements {
 		elements = append(elements, e.Inspect())
 	}
 

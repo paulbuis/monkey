@@ -1,6 +1,7 @@
 package ast
 
 import (
+	"encoding/json"
 	"monkey/token"
 )
 
@@ -19,6 +20,15 @@ func NewExpressionStatement(token token.Token, expression Expression) *Expressio
 
 func (es *ExpressionStatement) Token() token.Token {
 	return es.token
+}
+
+func (es *ExpressionStatement) MarshalJSON() ([]byte, error) {
+	m := make(map[string]interface{})
+	m["NodeType"] = "ExpressionStatement"
+	m[" token"] = es.token
+	m["expression"] = es.expression
+
+	return json.Marshal(m)
 }
 
 func (es *ExpressionStatement) Expression() Expression {

@@ -9,8 +9,16 @@ type Error struct {
 	message string
 }
 
-func New(format string, a ...interface{}) *Error {
-	return &Error{message: fmt.Sprintf(format, a...)}
+func New(format string, a interface{}) *Error {
+	return &Error{message: fmt.Sprintf(format, a)}
+}
+
+func New2(format string, a interface{}, b interface{}) *Error {
+	return &Error{message: fmt.Sprintf(format, a, b)}
+}
+
+func New3(format string, a interface{}, b interface{}, c interface{}) *Error {
+	return &Error{message: fmt.Sprintf(format, a, b, c)}
 }
 
 func (e *Error) Message() string {

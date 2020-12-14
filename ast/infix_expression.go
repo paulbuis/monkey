@@ -2,6 +2,7 @@ package ast
 
 import (
 	"bytes"
+	"encoding/json"
 	"monkey/token"
 )
 
@@ -33,6 +34,17 @@ func (ie *InfixExpression) Operator() string {
 
 func (ie *InfixExpression) Right() Expression {
 	return ie.right
+}
+
+func (ie *InfixExpression) MarshalJSON() ([]byte, error) {
+	m := make(map[string]interface{})
+	m["NodeType"] = "InfixExpression"
+	m[" token"] = ie.token
+	m["left"] = ie.left
+	m["operator"] = ie.operator
+	m["right"] = ie.right
+
+	return json.Marshal(m)
 }
 
 func (ie *InfixExpression) expressionNode() {}

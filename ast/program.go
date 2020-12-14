@@ -2,6 +2,7 @@ package ast
 
 import (
 	"bytes"
+	"encoding/json"
 )
 
 // represents a sequence of ast.Statement
@@ -26,4 +27,12 @@ func (p *Program) String() string {
 	}
 
 	return out.String()
+}
+
+func (p *Program) MarshalJSON() ([]byte, error) {
+	m := make(map[string]interface{})
+	m["NodeType"] = "Program"
+	m["program"] = p.Statements
+
+	return json.Marshal(m)
 }

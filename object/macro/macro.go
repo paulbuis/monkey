@@ -4,13 +4,14 @@ import (
 	"bytes"
 	"monkey/ast"
 	"monkey/object"
+	"monkey/object/function/environment"
 	"strings"
 )
 
 type Macro struct {
 	Parameters []*ast.Identifier
 	Body       *ast.BlockStatement
-	Env        *object.Environment
+	Env        *environment.Environment
 }
 
 func (m *Macro) Type() object.ObjectType {

@@ -2,6 +2,7 @@ package ast
 
 import (
 	"bytes"
+	"fmt"
 	"monkey/token"
 )
 
@@ -26,6 +27,31 @@ func (bs *BlockStatement) Statements() []Statement {
 	return bs.statements
 }
 
+func (bs *BlockStatement) MarshalJSON() ([]byte, error) {
+	var out bytes.Buffer
+	var err error
+	out.WriteString(`{"NodeType":"BlockStatement"`)
+	out.WriteString(`," token": `)
+	buf, _ := bs.token.MarshalJSON()
+	out.Write(buf)
+	out.WriteString(`, "statements": [`)
+
+	fmt.Println("Marshalling a BlockStatement")
+	for i, s := range bs.statements {
+		fmt.Println("s =", s.String())
+		buf, err = s.MarshalJSON()
+		if err != nil {
+			return []byte{}, err
+		}
+		out.Write(buf)
+		if i != len(bs.statements)-1 {
+			out.WriteRune(',')
+		}
+	}
+
+	out.WriteString("]}")
+	return out.Bytes(), nil
+}
 func (bs *BlockStatement) statementNode() {}
 
 func (bs *BlockStatement) TokenLiteral() string {
@@ -35,9 +61,13 @@ func (bs *BlockStatement) TokenLiteral() string {
 func (bs *BlockStatement) String() string {
 	var out bytes.Buffer
 
+	out.WriteRune('{')
+
 	for _, s := range bs.statements {
 		out.WriteString(s.String())
 	}
+
+	out.WriteRune('}')
 
 	return out.String()
 }

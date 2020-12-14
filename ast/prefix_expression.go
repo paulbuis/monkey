@@ -2,6 +2,7 @@ package ast
 
 import (
 	"bytes"
+	"encoding/json"
 	"monkey/token"
 )
 
@@ -28,6 +29,15 @@ func (pe *PrefixExpression) Operator() string {
 
 func (pe *PrefixExpression) Right() Expression {
 	return pe.right
+}
+
+func (pe *PrefixExpression) MarshalJSON() ([]byte, error) {
+	m := make(map[string]interface{})
+	m["NodeType"] = "PrefixExpression"
+	m[" token"] = pe.token
+	m["operator"] = pe.operator
+	m["right"] = pe.right
+	return json.Marshal(m)
 }
 
 func (pe *PrefixExpression) expressionNode() {}

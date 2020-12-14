@@ -2,6 +2,7 @@ package ast
 
 import (
 	"bytes"
+	"encoding/json"
 	"monkey/token"
 )
 
@@ -32,6 +33,15 @@ func (ie *IndexExpression) Index() Expression {
 	return ie.index
 }
 
+func (ie *IndexExpression) MarshalJSON() ([]byte, error) {
+	m := make(map[string]interface{})
+	m["NodeType"] = "IndexExpression"
+	m[" token"] = ie.token
+	m["expression"] = ie.left
+	m["index"] = ie.index
+
+	return json.Marshal(m)
+}
 func (ie *IndexExpression) expressionNode() {}
 
 func (ie *IndexExpression) TokenLiteral() string {

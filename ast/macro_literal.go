@@ -2,6 +2,7 @@ package ast
 
 import (
 	"bytes"
+	"encoding/json"
 	"monkey/token"
 	"strings"
 )
@@ -30,6 +31,15 @@ func (ml *MacroLiteral) Parameters() []*Identifier {
 
 func (ml *MacroLiteral) Body() *BlockStatement {
 	return ml.body
+}
+
+func (ml *MacroLiteral) MarshalJSON() ([]byte, error) {
+	m := make(map[string]interface{})
+	m["NodeType"] = "MacroLiteral"
+	m[" token"] = ml.token
+	m["arguments"] = ml.parameters
+	m["body"] = ml.body
+	return json.Marshal(m)
 }
 
 func (ml *MacroLiteral) expressionNode()      {}

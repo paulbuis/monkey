@@ -2,6 +2,7 @@ package ast
 
 import (
 	"bytes"
+	"encoding/json"
 	"monkey/token"
 	"strings"
 )
@@ -26,6 +27,16 @@ func (ce *CallExpression) Function() Expression {
 
 func (ce *CallExpression) Arguments() []Expression {
 	return ce.arguments
+}
+
+func (ce *CallExpression) MarshalJSON() ([]byte, error) {
+	m := make(map[string]interface{})
+	m["NodeType"] = "CallExpression"
+	m[" token"] = ce.token
+	m["function"] = ce.function
+	m["function_arguments"] = ce.arguments
+
+	return json.Marshal(m)
 }
 
 func (ce *CallExpression) expressionNode() {}

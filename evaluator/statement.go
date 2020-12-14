@@ -3,12 +3,14 @@ package evaluator
 import (
 	"monkey/ast"
 	"monkey/object"
+	"monkey/object/function/environment"
 	objectReturnValue "monkey/object/return_value"
 )
 
+// mutually recursive with Eval
 func evalBlockStatement(
 	block *ast.BlockStatement,
-	env *object.Environment,
+	env *environment.Environment,
 ) object.Object {
 	var result object.Object
 
@@ -26,13 +28,17 @@ func evalBlockStatement(
 	return result
 }
 
+// mutually recursive with Eval
 func evalReturnStatement(
-	node ast.Node,
-	env *object.Environment,
+	node *ast.ReturnStatement,
+	env *environment.Environment,
 ) object.Object {
-	val := Eval(node, env)
-	if isError(val) {
+	r := node.ReturnValue()
+	val := Eval(r, env)
+
+	if object.IsError(val) {
 		return val
 	}
+
 	return objectReturnValue.New(val)
 }

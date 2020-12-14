@@ -2,6 +2,7 @@ package ast
 
 import (
 	"bytes"
+	"encoding/json"
 	"monkey/token"
 	"strings"
 )
@@ -26,6 +27,16 @@ func (fl *FunctionLiteral) Parameters() []*Identifier {
 
 func (fl *FunctionLiteral) Body() *BlockStatement {
 	return fl.body
+}
+
+func (fl *FunctionLiteral) MarshalJSON() ([]byte, error) {
+	m := make(map[string]interface{})
+	m["NodeType"] = "FunctionLiteral"
+	m[" token"] = fl.token
+	m["arguments"] = fl.parameters
+	m["body"] = fl.body
+
+	return json.Marshal(m)
 }
 
 func (fl *FunctionLiteral) expressionNode() {}

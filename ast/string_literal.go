@@ -1,6 +1,7 @@
 package ast
 
 import (
+	"encoding/json"
 	"monkey/token"
 )
 
@@ -22,6 +23,15 @@ func (sl *StringLiteral) Token() token.Token {
 
 func (sl *StringLiteral) Value() string {
 	return sl.value
+}
+
+func (sl *StringLiteral) MarshalJSON() ([]byte, error) {
+	m := make(map[string]interface{})
+	m["NodeType"] = "StringLiteral"
+	m[" token"] = sl.token
+	m["value"] = sl.value
+
+	return json.Marshal(m)
 }
 
 func (sl *StringLiteral) expressionNode() {}

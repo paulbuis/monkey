@@ -7,7 +7,7 @@ import (
 	objectError "monkey/object/error"
 )
 
-func EvalIntegerInfixExpression(
+func ApplyIntegerInfixOperator(
 	operator string,
 	left, right object.Object,
 ) object.Object {
@@ -36,12 +36,12 @@ func EvalIntegerInfixExpression(
 	case "!=":
 		return objectBoolean.GetBoolean(leftVal.Cmp(rightVal) != 0)
 	default:
-		return objectError.New("unknown operator: %s %s %s",
+		return objectError.New3("unknown operator: %s %s %s",
 			left.Type(), operator, right.Type())
 	}
 }
 
-func EvalMinusPrefixOperatorExpression(right object.Object) object.Object {
+func ApplyMinusPrefixOperator(right object.Object) object.Object {
 	if right.Type() != object.INTEGER_OBJ {
 		return objectError.New("unknown operator: -%s", right.Type())
 	}
