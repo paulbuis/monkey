@@ -9,6 +9,7 @@ import (
 	"io"
 	"io/ioutil"
 	"monkey/ast"
+	"monkey/context"
 	"monkey/evaluator"
 	"monkey/lexer"
 	"monkey/object/function/environment"
@@ -30,18 +31,18 @@ func main() {
 	fileName := args[0]
 	fileStatus, errStatus := os.Lstat(fileName)
 	if errStatus != nil {
-		fmt.Fprintf(os.Stderr, "Could not obtain status of %s\n", fileName)
+		_, _ = fmt.Fprintf(os.Stderr, "Could not obtain status of %s\n", fileName)
 		os.Exit(4)
 	}
 	fileMode := fileStatus.Mode()
 	if !fileMode.IsRegular() {
-		fmt.Fprintf(os.Stderr, "Not a regular file %s\n", fileName)
+		_, _ = fmt.Fprintf(os.Stderr, "Not a regular file %s\n", fileName)
 		os.Exit(5)
 	}
 
 	in, errOpen := os.OpenFile(fileName, os.O_RDONLY, 0)
 	if errOpen != nil {
-		fmt.Fprintf(os.Stderr, "failed to open %s\n", fileName)
+		_, _ = fmt.Fprintf(os.Stderr, "failed to open %s\n", fileName)
 		os.Exit(6)
 	}
 
@@ -53,8 +54,8 @@ func ProcessProgram(in io.Reader, out io.Writer, errOut io.Writer, repl bool, js
 	buf, err := ioutil.ReadAll(in)
 	if err != nil {
 		var errBuf bytes.Buffer
-		fmt.Fprintln(&errBuf, "Error reading input")
-		errOut.Write(errBuf.Bytes())
+		_, _ = fmt.Fprintln(&errBuf, "Error reading input")
+		_, _ = errOut.Write(errBuf.Bytes())
 		return 1
 	}
 	source := string(buf)
@@ -75,11 +76,12 @@ func ProcessProgram(in io.Reader, out io.Writer, errOut io.Writer, repl bool, js
 	//macroEnv := environment.NewEnvironment()
 	//evaluator.DefineMacros(program, macroEnv)
 	//expanded := evaluator.ExpandMacros(program, macroEnv)
-	env := environment.NewEnvironment()
+	ctx := context.New(in, out)
+	env := environment.New(ctx)
 	evaluated := evaluator.Eval(syntaxTree, env)
 	if evaluated != nil {
-		io.WriteString(out, evaluated.Inspect())
-		io.WriteString(out, "\n")
+		_, _ = io.WriteString(out, evaluated.Inspect())
+		_, _ = io.WriteString(out, "\n")
 	}
 
 	if repl {
@@ -88,27 +90,27 @@ func ProcessProgram(in io.Reader, out io.Writer, errOut io.Writer, repl bool, js
 	return 0
 }
 
-func dumpJSON(syntaxTree *ast.Program, out io.Writer) {
-	bytes, errMarshal := syntaxTree.MarshalJSON()
+func dumpJSON(syntaxTree ast.Program, out io.Writer) {
+	buf, errMarshal := syntaxTree.MarshalJSON()
 	if errMarshal != nil {
-		fmt.Fprintln(out, fmt.Errorf("MarshalJSON() failed: %s", errMarshal))
+		_, _ = fmt.Fprintln(out, fmt.Errorf("MarshalJSON() failed: %s", errMarshal))
 		return
 	}
 
 	m := make(map[string]interface{})
-	errUnmarshal := json.Unmarshal(bytes, &m)
+	errUnmarshal := json.Unmarshal(buf, &m)
 	if errUnmarshal != nil {
-		fmt.Fprintln(out, fmt.Errorf("json.Unmarshal failed: %s", errUnmarshal))
-		fmt.Fprintln(out, string(bytes))
+		_, _ = fmt.Fprintln(out, fmt.Errorf("json.Unmarshal failed: %s", errUnmarshal))
+		_, _ = fmt.Fprintln(out, string(buf))
 	}
-	bytes, errMarshal = json.MarshalIndent(m, "", "    ")
-	fmt.Fprintln(out, string(bytes))
+	buf, errMarshal = json.MarshalIndent(m, "", "    ")
+	_, _ = fmt.Fprintln(out, string(buf))
 }
 
 func printParserErrors(out io.Writer, errors []string) {
-	io.WriteString(out, " parser errors:\n")
+	_, _ = io.WriteString(out, " parser errors:\n")
 	for _, msg := range errors {
-		io.WriteString(out, "\t"+msg+"\n")
+		_, _ = io.WriteString(out, "\t"+msg+"\n")
 	}
 }
 
@@ -117,13 +119,14 @@ const PROMPT = ">> "
 func Start(in io.Reader, out io.Writer, env *environment.Environment) {
 	scanner := bufio.NewScanner(in)
 	if env == nil {
-		env = environment.NewEnvironment()
+		ctx := context.New(in, out)
+		env = environment.New(ctx)
 	}
 	//macros temporarily disabled
 	//macroEnv := object.NewEnvironment()
 
 	for {
-		fmt.Fprintf(out, PROMPT)
+		_, _ = fmt.Fprintf(out, PROMPT)
 		scanned := scanner.Scan()
 		if !scanned {
 			return
@@ -142,11 +145,10 @@ func Start(in io.Reader, out io.Writer, env *environment.Environment) {
 		//macros temporarily disabled
 		//evaluator.DefineMacros(program, macroEnv)
 		//expanded := evaluator.ExpandMacros(program, macroEnv)
-
 		evaluated := evaluator.Eval(program, env)
 		if evaluated != nil {
-			io.WriteString(out, evaluated.Inspect())
-			io.WriteString(out, "\n")
+			_, _ = io.WriteString(out, evaluated.Inspect())
+			_, _ = io.WriteString(out, "\n")
 		}
 	}
 }

@@ -37,9 +37,11 @@ func (h *Hash) Inspect() string {
 	var out bytes.Buffer
 
 	pairs := make([]string, 0, len(h.Pairs))
+	i := 0
 	for _, pair := range h.Pairs {
-		pairs = append(pairs, fmt.Sprintf("%s: %s",
-			pair.Key.Inspect(), pair.Value.Inspect()))
+		pairs[i] = fmt.Sprintf("%s: %s",
+			pair.Key.Inspect(), pair.Value.Inspect())
+		i++
 	}
 
 	out.WriteString("{")

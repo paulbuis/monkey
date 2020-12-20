@@ -9,24 +9,24 @@ import (
 )
 
 type Function struct {
-	parameters []*ast.Identifier
-	body       *ast.BlockStatement
+	parameters []ast.Identifier
+	body       ast.BlockStatement
 	env        *environment.Environment
 }
 
 func New(
-	parameters []*ast.Identifier,
-	body *ast.BlockStatement,
+	parameters []ast.Identifier,
+	body ast.BlockStatement,
 	env *environment.Environment,
 ) *Function {
 	return &Function{parameters: parameters, body: body, env: env}
 }
 
-func (f *Function) Parameters() []*ast.Identifier {
+func (f *Function) Parameters() []ast.Identifier {
 	return f.parameters
 }
 
-func (f *Function) Body() *ast.BlockStatement {
+func (f *Function) Body() ast.BlockStatement {
 	return f.body
 }
 
@@ -38,9 +38,9 @@ func (f *Function) Type() object.ObjectType { return object.FUNCTION_OBJ }
 func (f *Function) Inspect() string {
 	var out bytes.Buffer
 
-	params := make([]string, 0, len(f.parameters))
-	for _, p := range f.parameters {
-		params = append(params, p.String())
+	params := make([]string, len(f.parameters))
+	for i, p := range f.parameters {
+		params[i] = p.String()
 	}
 
 	out.WriteString("fn")

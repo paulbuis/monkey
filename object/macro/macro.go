@@ -9,10 +9,12 @@ import (
 )
 
 type Macro struct {
-	Parameters []*ast.Identifier
-	Body       *ast.BlockStatement
+	Parameters []ast.Identifier
+	Body       ast.BlockStatement
 	Env        *environment.Environment
 }
+
+var _ object.Object = &Macro{}
 
 func (m *Macro) Type() object.ObjectType {
 	return object.MACRO_OBJ
@@ -21,9 +23,9 @@ func (m *Macro) Type() object.ObjectType {
 func (m *Macro) Inspect() string {
 	var out bytes.Buffer
 
-	params := make([]string, 0, len(m.Parameters))
-	for _, p := range m.Parameters {
-		params = append(params, p.String())
+	params := make([]string, len(m.Parameters))
+	for i, p := range m.Parameters {
+		params[i] = p.String()
 	}
 
 	out.WriteString("macro")

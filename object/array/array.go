@@ -70,9 +70,9 @@ func (sl *Slice) Type() object.ObjectType {
 func (sl *Slice) Inspect() string {
 	var out bytes.Buffer
 
-	elements := make([]string, 0, len(sl.elements))
-	for _, e := range sl.elements {
-		elements = append(elements, e.Inspect())
+	elements := make([]string, len(sl.elements))
+	for i, e := range sl.elements {
+		elements[i] = e.Inspect()
 	}
 
 	out.WriteString("[")
