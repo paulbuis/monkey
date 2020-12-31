@@ -2,24 +2,26 @@ package ast
 
 import (
 	"bytes"
-	"encoding/json"
+	"monkey/ast"
 	"monkey/token"
 )
 
-// represents a let statement
-//  conforms to interface Statement
-//  conforms to interface Node
-//  conforms to interface fmt.Stringer
+//  *LetStatement struct conforms to interface ast.LetStatement
 type LetStatement struct {
 	token token.Token // the token.LET token
 	name  *Identifier
-	value Expression
+	value ast.Expression
 }
 
+// diagnostic check to verify *LetStatement struct
+// in this package conforms to ast.LetStatement interface
+var _ ast.LetStatement = &LetStatement{}
+
+//
 func NewLetStatement(
 	token token.Token,
 	name *Identifier,
-	value Expression,
+	value ast.Expression,
 ) *LetStatement {
 	return &LetStatement{token: token, name: name, value: value}
 }
@@ -28,24 +30,15 @@ func (ls *LetStatement) Token() token.Token {
 	return ls.token
 }
 
-func (ls *LetStatement) Name() *Identifier {
+func (ls *LetStatement) Name() ast.Identifier {
 	return ls.name
 }
 
-func (ls *LetStatement) Value() Expression {
+func (ls *LetStatement) LetValue() ast.Expression {
 	return ls.value
 }
 
-func (ls *LetStatement) MarshalJSON() ([]byte, error) {
-	m := make(map[string]interface{})
-	m["NodeType"] = "LetStatement"
-	m[" token"] = ls.token
-	m["name"] = ls.name
-	m["value"] = ls.value
-
-	return json.Marshal(m)
-}
-func (ls *LetStatement) statementNode() {}
+func (ls *LetStatement) StatementNode() {}
 
 func (ls *LetStatement) TokenLiteral() string {
 	return ls.token.Literal()

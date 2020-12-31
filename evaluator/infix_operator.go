@@ -3,7 +3,7 @@ package evaluator
 import (
 	evalString "monkey/evaluator/string"
 	"monkey/object"
-	objectBoolean "monkey/object/boolean"
+	"monkey/object/boolean"
 	objectError "monkey/object/error"
 	objectInteger "monkey/object/integer"
 )
@@ -20,10 +20,10 @@ func applyInfixOperator(
 		return evalString.ApplyStringInfixOperator(operator, left, right)
 
 	case operator == "==":
-		return objectBoolean.GetBoolean(left == right)
+		return boolean.GetBoolean(left == right)
 
 	case operator == "!=":
-		return objectBoolean.GetBoolean(left != right)
+		return boolean.GetBoolean(left != right)
 
 	case left.Type() != right.Type():
 		return objectError.New3("type mismatch: %s %s %s",

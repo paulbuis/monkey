@@ -2,16 +2,24 @@ package ast
 
 import (
 	"bytes"
-	"encoding/json"
+	"monkey/ast"
 	"monkey/token"
 )
 
+// *ReturnStatement conforms to interface ast.ReturnStatement
 type ReturnStatement struct {
 	token       token.Token // the 'return' token
-	returnValue Expression
+	returnValue ast.Expression
 }
 
-func NewReturnStatement(token token.Token, returnValue Expression) *ReturnStatement {
+// diagnostic check to verify *ReturnStatement struct
+// in this package conforms to ast.ReturnStatement interface
+var _ ast.ReturnStatement = &ReturnStatement{}
+
+// this generates a compile error, which is a good thing!!!
+// var _ ast.ReturnStatement = &ExpressionStatement{}
+
+func NewReturnStatement(token token.Token, returnValue ast.Expression) *ReturnStatement {
 	return &ReturnStatement{token: token, returnValue: returnValue}
 }
 
@@ -19,20 +27,11 @@ func (rs *ReturnStatement) Token() token.Token {
 	return rs.token
 }
 
-func (rs *ReturnStatement) ReturnValue() Expression {
+func (rs *ReturnStatement) ReturnValue() ast.Expression {
 	return rs.returnValue
 }
 
-func (rs *ReturnStatement) MarshalJSON() ([]byte, error) {
-	m := make(map[string]interface{})
-	m["NodeType"] = "ReturnStatement"
-	m[" token"] = rs.token
-	m["returnValue"] = rs.returnValue
-
-	return json.Marshal(m)
-}
-
-func (rs *ReturnStatement) statementNode()       {}
+func (rs *ReturnStatement) StatementNode()       {}
 func (rs *ReturnStatement) TokenLiteral() string { return rs.token.Literal() }
 
 func (rs *ReturnStatement) String() string {

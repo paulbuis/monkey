@@ -9,12 +9,15 @@ import (
 )
 
 func evalHashLiteral(
-	node *ast.HashLiteral,
+	node ast.HashLiteral,
 	env *environment.Environment,
 ) object.Object {
 	pairs := make(map[object.HashKey]objectHash.Pair)
-	values := node.Values()
-	for i, keyNode := range node.Keys() {
+	count := node.PairCount()
+	//values := node.Values()
+	// i, keyNode := range node.Keys() {
+	for index := 0; index < count; index++ {
+		keyNode := node.Keys(index)
 		key := Eval(keyNode, env)
 		if object.IsError(key) {
 			return key
@@ -25,7 +28,7 @@ func evalHashLiteral(
 			return objectError.New("unusable as hash key: %s", key.Type())
 		}
 
-		valueNode := values[i]
+		valueNode := node.Values(index)
 		value := Eval(valueNode, env)
 		if object.IsError(value) {
 			return value
@@ -34,6 +37,5 @@ func evalHashLiteral(
 		hashed := hashKey.HashKey()
 		pairs[hashed] = objectHash.Pair{Key: hashKey, Value: value}
 	}
-
 	return &objectHash.Hash{Pairs: pairs}
 }

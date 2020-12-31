@@ -1,7 +1,7 @@
 package ast
 
 import (
-	"encoding/json"
+	"monkey/ast"
 	"monkey/token"
 )
 
@@ -13,6 +13,10 @@ type Boolean struct {
 	value bool
 }
 
+// diagnostic check to see if *Boolean struct
+// in this package conforms to ast.Boolean interface
+var _ ast.Boolean = &Boolean{}
+
 func NewBoolean(token token.Token, value bool) *Boolean {
 	return &Boolean{token: token, value: value}
 }
@@ -21,20 +25,11 @@ func (b *Boolean) Token() token.Token {
 	return b.token
 }
 
-func (b *Boolean) Value() bool {
+func (b *Boolean) BooleanValue() bool {
 	return b.value
 }
 
-func (b *Boolean) MarshalJSON() ([]byte, error) {
-	m := make(map[string]interface{})
-	m["NodeType"] = "Boolean"
-	m[" token"] = b.token
-	m["value"] = b.value
-
-	return json.Marshal(m)
-}
-
-func (b *Boolean) expressionNode() {}
+func (b *Boolean) ExpressionNode() {}
 
 func (b *Boolean) TokenLiteral() string {
 	return b.token.Literal()

@@ -9,7 +9,7 @@ import (
 )
 
 func evalIfExpression(
-	ie *ast.IfExpression,
+	ie ast.IfExpression,
 	env *environment.Environment,
 ) object.Object {
 	condition := Eval(ie.Condition(), env)

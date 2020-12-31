@@ -36,7 +36,7 @@ func (h *Hash) Type() object.ObjectType { return object.HASH_OBJ }
 func (h *Hash) Inspect() string {
 	var out bytes.Buffer
 
-	pairs := make([]string, 0, len(h.Pairs))
+	pairs := make([]string, len(h.Pairs))
 	i := 0
 	for _, pair := range h.Pairs {
 		pairs[i] = fmt.Sprintf("%s: %s",

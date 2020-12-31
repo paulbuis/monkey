@@ -3,7 +3,7 @@ package integer
 import (
 	"math/big"
 	"monkey/object"
-	objectBoolean "monkey/object/boolean"
+	"monkey/object/boolean"
 	objectError "monkey/object/error"
 )
 
@@ -28,13 +28,13 @@ func ApplyIntegerInfixOperator(
 		result = result.Div(leftVal, rightVal)
 		return &Integer{value: result}
 	case "<":
-		return objectBoolean.GetBoolean(leftVal.Cmp(rightVal) < 0)
+		return boolean.GetBoolean(leftVal.Cmp(rightVal) < 0)
 	case ">":
-		return objectBoolean.GetBoolean(leftVal.Cmp(rightVal) > 0)
+		return boolean.GetBoolean(leftVal.Cmp(rightVal) > 0)
 	case "==":
-		return objectBoolean.GetBoolean(leftVal.Cmp(rightVal) == 0)
+		return boolean.GetBoolean(leftVal.Cmp(rightVal) == 0)
 	case "!=":
-		return objectBoolean.GetBoolean(leftVal.Cmp(rightVal) != 0)
+		return boolean.GetBoolean(leftVal.Cmp(rightVal) != 0)
 	default:
 		return objectError.New3("unknown operator: %s %s %s",
 			left.Type(), operator, right.Type())

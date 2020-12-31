@@ -3,12 +3,10 @@ package main
 import (
 	"bufio"
 	"bytes"
-	"encoding/json"
 	"flag"
 	"fmt"
 	"io"
 	"io/ioutil"
-	"monkey/ast"
 	"monkey/context"
 	"monkey/evaluator"
 	"monkey/lexer"
@@ -69,7 +67,7 @@ func ProcessProgram(in io.Reader, out io.Writer, errOut io.Writer, repl bool, js
 	}
 
 	if json {
-		dumpJSON(syntaxTree, os.Stdout)
+		//dumpJSON(syntaxTree, os.Stdout)
 	}
 
 	//macros temporarily disabled
@@ -90,6 +88,7 @@ func ProcessProgram(in io.Reader, out io.Writer, errOut io.Writer, repl bool, js
 	return 0
 }
 
+/*
 func dumpJSON(syntaxTree ast.Program, out io.Writer) {
 	buf, errMarshal := syntaxTree.MarshalJSON()
 	if errMarshal != nil {
@@ -106,6 +105,8 @@ func dumpJSON(syntaxTree ast.Program, out io.Writer) {
 	buf, errMarshal = json.MarshalIndent(m, "", "    ")
 	_, _ = fmt.Fprintln(out, string(buf))
 }
+
+*/
 
 func printParserErrors(out io.Writer, errors []string) {
 	_, _ = io.WriteString(out, " parser errors:\n")

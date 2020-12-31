@@ -9,10 +9,12 @@ import (
 )
 
 // mutually recursive with Eval
-func evalProgram(program *ast.Program, env *environment.Environment) object.Object {
+func evalProgram(program ast.Program,
+	env *environment.Environment,
+) object.Object {
 	var result object.Object
 
-	for _, statement := range program.Statements {
+	for _, statement := range program.Statements() {
 		result = Eval(statement, env)
 
 		switch result := result.(type) {

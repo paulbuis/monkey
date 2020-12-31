@@ -16,7 +16,7 @@ type MacroLiteral struct {
 
 // diagnostic check to verify *MacroLiteral struct
 // in this package conforms to ast.MacroLiteral interface
-var _ ast.MacroLiteral = &MacroLiteral{}
+// var _ MacroLiteral = ast.MacroLiteral
 
 func NewMacroLiteral(
 	token token.Token,

@@ -1,7 +1,7 @@
 package ast
 
 import (
-	"encoding/json"
+	"monkey/ast"
 	"monkey/token"
 )
 
@@ -11,10 +11,17 @@ import (
 //	  conforms to interface fmt.Stringer
 type ExpressionStatement struct {
 	token      token.Token // the first token of the expression
-	expression Expression
+	expression ast.Expression
 }
 
-func NewExpressionStatement(token token.Token, expression Expression) *ExpressionStatement {
+// diagnostic check to see if *ExpressionStatement struct
+// in this package conforms to ast.ExpressionStatement  interface
+var _ ast.ExpressionStatement = &ExpressionStatement{}
+
+// this generates a compile error, which seems like a good thing!
+//var _ ast.ReturnStatement = &ExpressionStatement{}
+
+func NewExpressionStatement(token token.Token, expression ast.Expression) *ExpressionStatement {
 	return &ExpressionStatement{token: token, expression: expression}
 }
 
@@ -22,20 +29,11 @@ func (es *ExpressionStatement) Token() token.Token {
 	return es.token
 }
 
-func (es *ExpressionStatement) MarshalJSON() ([]byte, error) {
-	m := make(map[string]interface{})
-	m["NodeType"] = "ExpressionStatement"
-	m[" token"] = es.token
-	m["expression"] = es.expression
-
-	return json.Marshal(m)
-}
-
-func (es *ExpressionStatement) Expression() Expression {
+func (es *ExpressionStatement) Expression() ast.Expression {
 	return es.expression
 }
 
-func (es *ExpressionStatement) statementNode() {}
+func (es *ExpressionStatement) StatementNode() {}
 
 func (es *ExpressionStatement) TokenLiteral() string {
 	return es.token.Literal()
