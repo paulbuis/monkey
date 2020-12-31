@@ -1,0 +1,155 @@
+package ast
+
+import (
+	"monkey/token"
+	"reflect"
+	"testing"
+)
+
+func TestModify(t *testing.T) {
+	one := func() Expression { return NewIntegerLiteral(token.Token{},1) }
+	two := func() Expression { return NewIntegerLiteral(token.Token{},2) }
+
+	turnOneIntoTwo := func(node Node) Node {
+		integer, ok := node.(*IntegerLiteral)
+		if !ok {
+			return node
+		}
+
+		if integer.Value() != 1 {
+			return node
+		}
+
+		return NewIntegerLiteral(token.Token{},2)
+	}
+
+	tests := []struct {
+		input    Node
+		expected Node
+	}{
+		{
+			one(),
+			two(),
+		},
+		{
+			&Program{
+				Statements: []Statement{
+					NewExpressionStatement(token.Token{}, one()),
+					//&ExpressionStatement{Expression: one()},
+				},
+			},
+			&Program{
+				Statements: []Statement{
+					NewExpressionStatement(token.Token{}, two()),
+					//&ExpressionStatement{Expression: two()},
+				},
+			},
+		},
+		{
+			NewInfixExpression(token.Token{}, one(), "+", two()),
+			NewInfixExpression(token.Token{}, two(), "+", two()),
+		},
+		{
+			NewInfixExpression(token.Token{}, two(), "+", one()),
+			NewInfixExpression(token.Token{}, two(), "+", two()),
+		},
+		{
+			&PrefixExpression{Operator: "-", Right: one()},
+			&PrefixExpression{Operator: "-", Right: two()},
+		},
+		{
+			NewIndexExpression(token.Token{}, one(), one()),
+			NewIndexExpression(token.Token{}, two(), two()),
+		},
+		{
+			NewIfExpression( token.Token{},
+				one(),
+				NewBlockStatement( token.Token{},
+					[]Statement{
+						NewExpressionStatement(token.Token{}, one()),
+						//&ExpressionStatement{Expression: one()},
+					},
+				),
+				NewBlockStatement( token.Token{},
+					[]Statement{
+						NewExpressionStatement(token.Token{}, one()),
+						//&ExpressionStatement{Expression: one()},
+					},
+				),
+			),
+			NewIfExpression( token.Token{},
+				two(),
+				NewBlockStatement( token.Token{},
+					[]Statement{
+						NewExpressionStatement(token.Token{}, two()),
+					},
+				),
+				NewBlockStatement( token.Token{},
+					[]Statement{
+						NewExpressionStatement(token.Token{}, two()),
+					},
+				),
+			),
+		},
+		{
+			&ReturnStatement{ReturnValue: one()},
+			&ReturnStatement{ReturnValue: two()},
+		},
+		{
+			&LetStatement{Value: one()},
+			&LetStatement{Value: two()},
+		},
+		{
+			NewFunctionLiteral(token.Token{}, []*Identifier{},
+
+				NewBlockStatement(token.Token{}, []Statement{
+						NewExpressionStatement(token.Token{}, one()),
+					},
+				),
+			),
+			NewFunctionLiteral(token.Token{}, []*Identifier{},
+				NewBlockStatement( token.Token{}, []Statement{
+						NewExpressionStatement(token.Token{}, two()),
+					},
+				),
+			),
+		},
+		{
+			&ArrayLiteral{elements: []Expression{one(), one()}},
+			&ArrayLiteral{elements: []Expression{two(), two()}},
+		},
+	}
+
+	for _, tt := range tests {
+		Modify(tt.input, turnOneIntoTwo)
+
+		equal := reflect.DeepEqual(tt.input, tt.expected)
+		if !equal {
+			t.Errorf("not equal. got=%#v, want=%#v",
+				tt.input, tt.expected)
+		}
+	}
+
+	// Another separate test because `reflect.DeepEqual` with maps and
+	// interfaces and pointers is DeeplyWeird™
+	hashLiteral := NewHashLiteral( token.Token{},
+		map[Expression]Expression{
+			one(): one(),
+			one(): one(),
+		},
+	)
+
+	Modify(hashLiteral, turnOneIntoTwo)   // why no assignment ???, this test suddenly taking 15 seconds instead on 0.5
+	                                      // hash literals have expressions as keys! not good !!! end up hashing on addresses!!!
+
+	for key, val := range hashLiteral.Pairs() {
+		key, _ := key.(*IntegerLiteral)
+		if key.Value() != 2 {
+			t.Errorf("value is not %d, got=%d", 2, key.Value())
+		}
+		val, _ := val.(*IntegerLiteral)
+		if val.Value() != 2 {
+			t.Errorf("value is not %d, got=%d", 2, val.Value())
+		}
+	}
+}

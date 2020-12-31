@@ -1,0 +1,72 @@
+package ast
+
+type ModifierFunc func(Node) Node
+
+func Modify(node Node, modifier ModifierFunc) {
+	switch node := node.(type) {
+
+	case *Program:
+		for _, statement := range node.Statements {
+			Modify(statement, modifier)
+		}
+
+	case *ExpressionStatement:
+		Modify(node.expression, modifier)
+		//node.Expression, _ = Modify(node.Expression, modifier).(Expression)
+
+	case *InfixExpression:
+		Modify(node.left, modifier)
+		// why not modify node.operator ??
+		Modify(node.right, modifier)
+
+	case *PrefixExpression:
+		Modify(node.Right, modifier)
+
+	case *IndexExpression:
+		Modify(node.left, modifier)
+		Modify(node.index, modifier)
+
+	case *IfExpression:
+		Modify(node.condition, modifier)
+		Modify(node.consequence, modifier)
+		if node.Alternative() != nil {
+			Modify(node.alternative, modifier)
+		}
+
+	case *BlockStatement:
+		for _, statement := range node.statements {
+			Modify(statement, modifier)
+		}
+
+	case *ReturnStatement:
+		Modify(node.ReturnValue, modifier)
+
+	case *LetStatement:
+		Modify(node.Value, modifier)
+
+	case *FunctionLiteral:
+		parameters := node.Parameters()
+		for _, parameter := range parameters {
+			Modify(parameter, modifier)
+		}
+		Modify(node.body, modifier)
+
+	case *ArrayLiteral:
+		for _, element := range node.elements {
+			Modify(element, modifier)
+		}
+
+	case *HashLiteral:
+		newPairs := make(map[Expression]Expression)
+		for key, val := range node.Pairs() {
+			Modify(key, modifier)
+			Modify(val, modifier)
+			newPairs[key] = val
+		}
+		node.pairs = newPairs
+
+	}
+
+	// doing a post-order traversal, so we call modifier on children above
+	modifier(node)
+}
