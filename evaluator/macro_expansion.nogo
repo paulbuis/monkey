@@ -3,12 +3,13 @@ package evaluator
 import (
 	"monkey/ast"
 	"monkey/object"
+	environment "monkey/object/function/environment"
 )
 
-func DefineMacros(program *ast.Program, env *object.Environment) {
+func DefineMacros(program ast.Program, env *environment.Environment) {
 	definitions := []int{}
 
-	for i, statement := range program.Statements {
+	for i, statement := range program.Statements() {
 		if isMacroDefinition(statement) {
 			addMacro(statement, env)
 			definitions = append(definitions, i)
@@ -25,12 +26,12 @@ func DefineMacros(program *ast.Program, env *object.Environment) {
 }
 
 func isMacroDefinition(node ast.Statement) bool {
-	letStatement, ok := node.(*ast.LetStatement)
+	letStatement, ok := node.(ast.LetStatement)
 	if !ok {
 		return false
 	}
 
-	_, ok = letStatement.Value.(*ast.MacroLiteral)
+	_, ok = letStatement.LetValue().(*ast.MacroLiteral)
 	if !ok {
 		return false
 	}
@@ -38,9 +39,9 @@ func isMacroDefinition(node ast.Statement) bool {
 	return true
 }
 
-func addMacro(stmt ast.Statement, env *object.Environment) {
-	letStatement, _ := stmt.(*ast.LetStatement)
-	macroLiteral, _ := letStatement.Value.(*ast.MacroLiteral)
+func addMacro(stmt ast.Statement, env *environment.Environment) {
+	letStatement, _ := stmt.(ast.LetStatement)
+	macroLiteral, _ := letStatement.LetValue().(*ast.MacroLiteral)
 
 	macro := &object.Macro{
 		Parameters: macroLiteral.Parameters,
@@ -48,12 +49,12 @@ func addMacro(stmt ast.Statement, env *object.Environment) {
 		Body:       macroLiteral.Body,
 	}
 
-	env.Set(letStatement.Name.Value(), macro)
+	env.Set(letStatement.Name().IdentifierName(), macro)
 }
 
-func ExpandMacros(program ast.Node, env *object.Environment) ast.Node {
+func ExpandMacros(program ast.Node, env *environment.Environment) ast.Node {
 	return ast.Modify(program, func(node ast.Node) ast.Node {
-		callExpression, ok := node.(*ast.CallExpression)
+		callExpression, ok := node.(ast.CallExpression)
 		if !ok {
 			return node
 		}
@@ -78,15 +79,15 @@ func ExpandMacros(program ast.Node, env *object.Environment) ast.Node {
 }
 
 func isMacroCall(
-	exp *ast.CallExpression,
-	env *object.Environment,
+	exp ast.CallExpression,
+	env *environment.Environment,
 ) (*object.Macro, bool) {
-	identifier, ok := exp.Function().(*ast.Identifier)
+	identifier, ok := exp.Function().(ast.Identifier)
 	if !ok {
 		return nil, false
 	}
 
-	obj, ok := env.Get(identifier.Value())
+	obj, ok := env.Get(identifier.IdentifierName())
 	if !ok {
 		return nil, false
 	}
@@ -99,10 +100,11 @@ func isMacroCall(
 	return macro, true
 }
 
-func quoteArgs(exp *ast.CallExpression) []*object.Quote {
+func quoteArgs(exp ast.CallExpression) []*object.Quote {
 	args := []*object.Quote{}
 
-	for _, a := range exp.Arguments() {
+	for i := 0; i < exp.ArgumentCount(); i++ {
+		a := exp.Argument(i)
 		args = append(args, &object.Quote{Node: a})
 	}
 
@@ -112,7 +114,7 @@ func quoteArgs(exp *ast.CallExpression) []*object.Quote {
 func extendMacroEnv(
 	macro *object.Macro,
 	args []*object.Quote,
-) *object.Environment {
+) *environment.Environment {
 	extended := object.NewEnclosedEnvironment(macro.Env)
 
 	for paramIdx, param := range macro.Parameters {

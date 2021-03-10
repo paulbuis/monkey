@@ -11,41 +11,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="04f1c568-9daa-4ff8-afaa-701da0b398a2" name="Default Changelist" comment="Additional code for non-interactive use">
-      <change afterPath="$PROJECT_DIR$/ast/ast.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evaluator/return_statement.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/javascript/javascript.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/json/json.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/parser/ast/prefix_expression.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/parser/ast/program.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ast/array_literal.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/ast/array_literal.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ast/block_statement.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/ast/block_statement.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ast/boolean.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/ast/boolean.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ast/call_expression.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/ast/call_expression.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ast/expression_statement.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/ast/expression_statement.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ast/function_literal.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/ast/function_literal.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ast/hash_literal.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/ast/hash_literal.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ast/identifier.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/ast/identifier.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ast/if_expression.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/ast/if_expression.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ast/index_expression.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/ast/index_expression.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ast/infix_expression.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/ast/infix_expression.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ast/integer_literal.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/ast/integer_literal.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ast/let_statement.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/ast/let_statement.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ast/prefix_expression.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ast/program.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/ast/return_statement.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/ast/return_statement.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ast/string_literal.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/ast/string_literal.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluator/array_literal.go" beforeDir="false" afterPath="$PROJECT_DIR$/evaluator/array_literal.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluator/function.go" beforeDir="false" afterPath="$PROJECT_DIR$/evaluator/function.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluator/hash_literal.go" beforeDir="false" afterPath="$PROJECT_DIR$/evaluator/hash_literal.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluator/identifier/identifier.go" beforeDir="false" afterPath="$PROJECT_DIR$/evaluator/identifier/identifier.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluator/if_expression.go" beforeDir="false" afterPath="$PROJECT_DIR$/evaluator/if_expression.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluator/infix_operator.go" beforeDir="false" afterPath="$PROJECT_DIR$/evaluator/infix_operator.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluator/program.go" beforeDir="false" afterPath="$PROJECT_DIR$/evaluator/program.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/evaluator/statement.go" beforeDir="false" afterPath="$PROJECT_DIR$/evaluator/block_statement.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluator/macro_expansion.nogo" beforeDir="false" afterPath="$PROJECT_DIR$/evaluator/macro_expansion.nogo" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/object/hash/hash.go" beforeDir="false" afterPath="$PROJECT_DIR$/object/hash/hash.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/object/integer/apply_integer_operator.go" beforeDir="false" afterPath="$PROJECT_DIR$/object/integer/apply_integer_operator.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/parser/ast/macro_literal.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/ast/macro_literal.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/parser/parser_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/parser/parser_test.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -124,7 +93,8 @@
     <MESSAGE value="More refactoring!" />
     <MESSAGE value="Additional code for non-interactive use" />
     <MESSAGE value="Initial commit!, Thought this had been committed earlier!" />
-    <option name="LAST_COMMIT_MESSAGE" value="Initial commit!, Thought this had been committed earlier!" />
+    <MESSAGE value="Fixed stuff I broke." />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed stuff I broke." />
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
